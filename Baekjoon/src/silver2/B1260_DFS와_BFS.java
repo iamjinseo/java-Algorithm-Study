@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 
-public class B1260_DFS¿Í_BFS {
+public class B1260_DFSì™€_BFS {
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
@@ -13,7 +13,7 @@ public class B1260_DFS¿Í_BFS {
 		int N = Integer.parseInt(st.nextToken());
 		int V = Integer.parseInt(st.nextToken());
 		int startNode = Integer.parseInt(st.nextToken());
-		Graph g = new Graph();
+		Graph g = new Graph(N);
 
 		for (int i = 0; i < V; i++) {
 			st = new StringTokenizer(br.readLine());
@@ -24,60 +24,112 @@ public class B1260_DFS¿Í_BFS {
 		}
 
 		g.DFS(startNode);
+		g.BFS(startNode);
 	}
 }
 
 class Graph {
-	public Map<Integer, ArrayList<Integer>> adjList = new HashMap<>(); // ÀÎÁ¢¸®½ºÆ®(ÀÎÁ¢³ëµåµé)
+	public Map<Integer, ArrayList<Integer>> adjList = new HashMap<>(); // ì¸ì ‘ë¦¬ìŠ¤íŠ¸(ì¸ì ‘ë…¸ë“œë“¤)
+	boolean[] visited;
 
+	public Graph(int N) {
+		this.visited = new boolean[N + 1]; // ë°©ë¬¸ê²€ì‚¬ìš© ë°°ì—´
+	}
+
+	// N1ê³¼ N2ê°„ì˜ Vertexì¶”ê°€
 	public void makeVertex(int N1, int N2) {
-		// N1°ú N2°£ÀÇ VertexÃß°¡
-		// N1 ³ëµå°¡ value·Î °¡Áö°íÀÖ´Â ¸®½ºÆ®¿¡ N2Ãß°¡
+		// N1 ë…¸ë“œê°€ valueë¡œ ê°€ì§€ê³ ìˆëŠ” ë¦¬ìŠ¤íŠ¸ì— N2ì¶”ê°€
+		ArrayList<Integer> temp = adjList.get(N1); // n1ì˜ ì¸ì ‘ë…¸ë“œë“¤
 
-		ArrayList<Integer> temp = adjList.get(N1); // n1ÀÇ ÀÎÁ¢³ëµåµé
-
-		if (temp == null) // ¸¸¾à¿¡ ºñ¾úÀ¸¸é »õ·Î¸¸µé±â
+		if (temp == null) // ë§Œì•½ì— ë¹„ì—ˆìœ¼ë©´ ìƒˆë¡œë§Œë“¤ê¸°
 			temp = new ArrayList<Integer>();
 
-		// °£¼±¸¸µé±â
+		// ê°„ì„ ë§Œë“¤ê¸°
 		temp.add(N2);
 		adjList.put(N1, temp);
+		// ==========================================
+		// N2ë…¸ë“œê°€ valueë¡œ ê°€ì§€ê³ ìˆëŠ” ë¦¬ìŠ¤íŠ¸ì— N1ì¶”ê°€
+		temp = adjList.get(N2); // n1ì˜ ì¸ì ‘ë…¸ë“œë“¤
+
+		if (temp == null) // ë§Œì•½ì— ë¹„ì—ˆìœ¼ë©´ ìƒˆë¡œë§Œë“¤ê¸°
+			temp = new ArrayList<Integer>();
+
+		// ê°„ì„ ë§Œë“¤ê¸°
+		temp.add(N1);
+		adjList.put(N2, temp);
 	}
 
 	public void DFS(int startNode) {
-		Stack<Integer> stack = new Stack<>(); // DFS¿ë ½ºÅÃ
-		boolean[] visited = new boolean[adjList.size() + 1]; // ¹æ¹®°Ë»ç¿ë ¹è¿­
+		// visitedì´ˆê¸°í™” ì „ì²˜ë¦¬
+		Arrays.fill(visited, false);
 
-		stack.add(startNode); // ½ºÅÃ¿¡ ¼øÈ¸ ½ÃÀÛ ³ëµå »ğÀÔ
+		Stack<Integer> stack = new Stack<>(); // DFSìš© ìŠ¤íƒ
 
-		// ================³ëµå ¼øÈ¸ ½ÃÀÛ=====================
-		while (stack != null) {
-			int popedNode = stack.pop(); // ½ºÅÃ »ó´Ü¿¡¼­ pop = ¹æ¹®
-			System.out.print(popedNode + " "); // popÇÑ ³ëµå(¹æ¹®ÇÑ ³ëµå) Ãâ·Â
+		// ì‹œì‘ ì •ì  ê²°ì •
+		stack.add(startNode);
+		visited[startNode] = true;
 
-			visited[popedNode] = true; // ¹æ¹®Ã³¸®
+		// ================ë…¸ë“œ ìˆœíšŒ ì‹œì‘=====================
+		while (stack.size() != 0) {
+			// ìŠ¤íƒì˜ ìµœìƒë‹¨ í™•ì¸
+			int popedNode = stack.pop();
+			System.out.print(popedNode + " "); // popí•œ ë…¸ë“œ(ë°©ë¬¸í•œ ë…¸ë“œ) ì¶œë ¥
 
-			// adjList¿¡¼­ popÇÑ ³ëµåÀÇ ÀÎÁ¢ ³ëµåµé °Ë»ç
+			// ë°©ë¬¸ ë…¸ë“œì˜ ì¸ì ‘ ë…¸ë“œë“¤ ê²€ì‚¬
 			ArrayList<Integer> popedList = adjList.get(popedNode);
 
-			// ÀÛÀº ³ëµåºÎÅÍ °Ë»çÇØ¾ß ÇÏ¹Ç·Î Á¤·Ä
 			if (popedList != null) {
 				Collections.sort(popedList);
+				// ë°©ë¬¸ë…¸ë“œì— ì¸ì ‘í•œ ë…¸ë“œë“¤ì˜ ë¦¬ìŠ¤íŠ¸ë¥¼ ë‚´ë¦¼ì°¨ìˆœ ì •ë ¬í•´ì„œ addí•´ì•¼
+				// stackì—ì„œ ì˜¤ë¦„ì°¨ìˆœìœ¼ë¡œ popí•  ìˆ˜ ìˆìŒ
+				Collections.reverse(popedList);
 
-				// ÀÎÁ¢ÇÑ ³ëµå ÇÏ³ª °Ë»ç
+				// ì¸ì ‘í•œ ë…¸ë“œ í•˜ë‚˜ ê²€ì‚¬
 				for (Integer node : popedList) {
+					// ë°©ë¬¸í•˜ì§€ ì•Šì€ ì •ì  ì¡´ì¬í•  ì‹œ
 					if (!visited[node]) {
 						stack.add(node);
-						break;
+						visited[node] = true;
 					}
-				} // ÀÎÁ¢ÇÑ ³ëµå ÇÏ³ª °Ë»ç ³¡
-			}
-
-		} // ³ëµå ¼øÈ¸ ³¡ ==================================
-
-	} // DFS ³¡ ==========================================
+				} // ì¸ì ‘í•œ ë…¸ë“œ í•˜ë‚˜ ê²€ì‚¬ ë
+			} //í˜„ì¬ ë°©ë¬¸ë…¸ë“œì˜ ì¸ì ‘ë…¸ë“œ ì—¬ë¶€ê²€ì‚¬ ë
+		} // ë…¸ë“œ ìˆœíšŒ ë ==================================
+		System.out.println();
+	} // DFS ë ==========================================
 
 	public void BFS(int startNode) {
+		// visitedì´ˆê¸°í™” ì „ì²˜ë¦¬
+		Arrays.fill(visited, false);
 
-	}
+		Queue<Integer> queue = new LinkedList<>();
+
+		// ì‹œì‘ ì •ì  ê²°ì •
+		queue.add(startNode);
+		visited[startNode] = true;
+
+		// ================ë…¸ë“œ ìˆœíšŒ ì‹œì‘=====================
+		while (queue.size() != 0) {
+
+			// íì˜ ë§¨ì• ë…¸ë“œ í™•ì¸
+			int polledNode = queue.poll();
+			System.out.print(polledNode+" ");
+
+			// í˜„ì¬ ë°©ë¬¸ë…¸ë“œì˜ ì¸ì ‘ë…¸ë“œê°€ ìˆëŠ”ì§€ ê²€ì‚¬
+			ArrayList<Integer> polledList = adjList.get(polledNode);
+
+			if (polledList != null) {
+				// ì˜¤ë¦„ì°¨ìˆœìœ¼ë¡œ ë…¸ë“œì— ë°©ë¬¸í•´ì•¼í•´ì„œ ì¸ì ‘ë…¸ë“œ ì •ë ¬
+				Collections.sort(polledList);
+				
+				// ì¸ì ‘ë…¸ë“œ ìˆœíšŒ
+				for (Integer node : polledList) {
+					if (!visited[node]) { //ë°©ë¬¸í•˜ì§€ ì•Šì€ ë…¸ë“œë§Œ enqueue
+						queue.add(node);
+						visited[node]=true;
+					}
+				} //ì¸ì ‘ë…¸ë“œ ìˆœíšŒ ë
+			} // ë°©ë¬¸ë…¸ë“œì˜ ì¸ì ‘ë…¸ë“œ ìœ ë¬´ ê²€ì‚¬
+		} // ================ë…¸ë“œ ìˆœíšŒ ë ===================
+		System.out.println();
+	}//BFSë
 }
