@@ -22,7 +22,6 @@ public class B1260_DFS와_BFS {
 
 			g.makeVertex(N1, N2);
 		}
-
 		g.DFS(startNode);
 		g.BFS(startNode);
 	}
@@ -67,13 +66,17 @@ class Graph {
 
 		// 시작 정점 결정
 		stack.add(startNode);
-		visited[startNode] = true;
 
 		// ================노드 순회 시작=====================
 		while (stack.size() != 0) {
 			// 스택의 최상단 확인
 			int popedNode = stack.pop();
-			System.out.print(popedNode + " "); // pop한 노드(방문한 노드) 출력
+			
+			// 미방문 노드일시 방문처리 및 결과에 입력
+			if (!visited[popedNode]) {
+				visited[popedNode]=true;
+				System.out.print(popedNode+" ");
+			}
 
 			// 방문 노드의 인접 노드들 검사
 			ArrayList<Integer> popedList = adjList.get(popedNode);
@@ -87,10 +90,8 @@ class Graph {
 				// 인접한 노드 하나 검사
 				for (Integer node : popedList) {
 					// 방문하지 않은 정점 존재할 시
-					if (!visited[node]) {
+					if (!visited[node])
 						stack.add(node);
-						visited[node] = true;
-					}
 				} // 인접한 노드 하나 검사 끝
 			} //현재 방문노드의 인접노드 여부검사 끝
 		} // 노드 순회 끝 ==================================
@@ -101,7 +102,7 @@ class Graph {
 		// visited초기화 전처리
 		Arrays.fill(visited, false);
 
-		Queue<Integer> queue = new LinkedList<>();
+		Queue<Integer> queue = new LinkedList<>();  //BFS용 큐
 
 		// 시작 정점 결정
 		queue.add(startNode);
