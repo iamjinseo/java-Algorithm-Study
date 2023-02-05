@@ -5,8 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 
-public class B2910_빈도정렬 {
-
+public class B2910_빈도_정렬 {
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
@@ -32,14 +31,6 @@ public class B2910_빈도정렬 {
 				map.put(n, arr); //넣기
 			}
 		}
-		for (Map.Entry<Integer,int[]> e : map.entrySet()) {
-			System.out.println("=======================");
-			System.out.println(e.getKey());
-			System.out.println(e.getValue()[0]);
-			System.out.println(e.getValue()[1]);
-			System.out.println("=======================");
-		}
-		
 		///////////////////////입력완료//////////////////////////
 		List<Map.Entry<Integer, int[]>> list = new ArrayList<>(map.entrySet());
 		Collections.sort(list, (o1, o2)-> {
