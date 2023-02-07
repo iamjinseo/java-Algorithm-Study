@@ -54,7 +54,7 @@ public class S1210_ladder {
 				}
 			}
 			//j가 0이므로 출발지에 도달함
-			System.out.printf("#%d %d", t, j);
+			System.out.printf("#%d %d\n", t, j);
 
 		} // 테스트케이스 끝
 	}
