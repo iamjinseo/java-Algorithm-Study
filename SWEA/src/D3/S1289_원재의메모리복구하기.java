@@ -32,7 +32,7 @@ public class S1289_원재의메모리복구하기 {
 				// idx전까지의 문자열 떼고, idx부터의 문자열은 전부 0으로 변경
 				mem = mem.substring(0, idx) + mem.substring(idx).replace('1', '0');
 			}
-			else { //원래 지금 자리수 숫자가 0이어야 되면
+			else { //원래 지금 자리수 숫자가 1이어야 되면
 				// 1011 vs 1000 => 10+11
 				mem = mem.substring(0, idx) + mem.substring(idx).replace('0', '1');
 			}
