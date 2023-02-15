@@ -7,8 +7,6 @@ import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class B16935_배열돌리기3 {
-	static int[] di = { 1, 0, -1, 0 };
-	static int[] dj = { 0, 1, 0, -1 };
 	static int N;
 	static int M;
 	static int R;
@@ -48,7 +46,6 @@ public class B16935_배열돌리기3 {
 				rotate4();
 				break;
 			case 5:
-				System.out.println("=======rotate 5 시작=======");
 				rotate5();
 				break;
 			case 6:
@@ -84,19 +81,14 @@ public class B16935_배열돌리기3 {
 
 	// 배열을 좌우 반전
 	static void rotate2() {
-		// 서로 반전시켜야 하는 열은 대칭임
-		int[] col = new int[M]; // 예를들어 6x6이면 0열, 1열, 2열
-		int[] temp = new int[M]; // 3열, 4열, 5열
-		for (int j = 0; j < M / 2; j++) {
-			for (int i = 0; i < N; i++) {
-				col[i] = map[i][j];
-				temp[i] = map[i][M - 1 - j];
-			} // 서로 대칭되는 열 정보 저장
-			for (int i = 0; i < N; i++) {
-				map[i][M - 1 - j] = col[i];
-				map[i][j] = temp[i];
-			} // 저장된 정보 기반으로 값 변경
+		int[][] newMap = new int[N][M];
+		
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < M; j++) {
+				newMap[i][M-1-j] = map[i][j];
+			}
 		}
+		map = newMap;
 	}
 
 	// 배열을 90도로 우회전
@@ -111,6 +103,10 @@ public class B16935_배열돌리기3 {
 				newMap[j][N - 1 - i] = map[i][j]; // newMap에선 j가 행이 돼야 함
 			}
 		}
+		int temp = M;
+		M = N;
+		N = temp;
+		
 		map = newMap;
 	}
 
@@ -126,58 +122,13 @@ public class B16935_배열돌리기3 {
 				newMap[M - 1 - j][i] = map[i][j];
 			}
 		}
+		int temp = M;
+		M = N;
+		N = temp;
+		
 		map = newMap;
 	}
 
-
-//	static void rotate5() {
-//		// 1그룹: 0,0 | 2그룹: 0, M/2 | 4그룹: N/2, 0 | 3그룹: N/2, M/2
-//		int[][] d = { { 0, 0 }, { 0, M / 2 }, { N / 2, 0 }, { N / 2, M / 2 } };
-//		// save=초기지점 넣음
-//		// next=다음지점 넣음 그리고 다음지점위치에 save값 넣음
-//		// save = next
-//		int[][] save = new int[N / 2][M / 2];
-//		int[][] next = new int[N / 2][M / 2];
-//		
-//		// save 부분배열 넣기
-//		for (int i = 0; i < N/2; i++) {
-//			for (int j = 0; j < M/2; j++) {
-//				save[i][j] = map[i][j];
-//			}
-//		}
-//		
-//		for (int n = 1; n < d.length - 1; n++) {
-//			//디버깅용
-//			System.out.print("지금 시작 좌표는: ");
-//			System.out.println(d[n][0]+", "+d[n][1]);
-//			System.out.println("다음 좌표는: "+d[n+1][0]+", "+d[n+1][1]);
-//			///////////////////////////
-//
-//			//디버깅용 코드
-//			StringBuilder sb= new StringBuilder();
-//			for (int[] a : save) {
-//				for (int b : a) {
-//					sb.append(b+" ");
-//				}
-//				sb.append("\n");
-//			}
-//			System.out.println("지금 save는");
-//			System.out.println(sb);
-//			////////////////////////////
-//			
-//			// next
-//			int ni = d[n][0];
-//			int nj = d[n][1];
-//			
-//			for (int i = ni; i < ni+N/2; i++) {
-//				for (int j = nj; j < nj+M/2; j++) {
-//					next[i-ni][j-nj] = map[i][j];
-//					map[i][j] = save[i-ni][j-nj];
-//				}
-//				save = next;
-//			}
-//		}
-//	}
 	static void rotate5() {
 		int[][] newMap = new int[N][M];
 
@@ -205,6 +156,28 @@ public class B16935_배열돌리기3 {
 	}
 
 	static void rotate6() {
-		int newMap = new int[N][M];
+		int[][] newMap = new int[N][M];
+		
+		for (int i = 0; i < N/2; i++) { //왼위 -> 왼아래
+			for (int j = 0; j < M/2; j++) {
+				newMap[i+N/2][j] = map[i][j];
+			}
+		}
+		for (int i = N/2; i < N; i++) { //왼아래 -> 오른아래
+			for (int j = 0; j < M/2; j++) {
+				newMap[i][j+M/2] = map[i][j];
+			}
+		}
+		for (int i = N/2; i < N; i++) { // 오른아래 -> 오른위
+			for (int j = M/2; j < M; j++) {
+				newMap[i-N/2][j] = map[i][j];
+			}
+		}
+		for (int i = 0; i < N/2; i++) { //오른쪽 -> 왼쪽
+			for (int j = M/2; j < M; j++) {
+				newMap[i][j-M/2] = map[i][j];
+			}
+		}
+		map = newMap;
 	}
 }
