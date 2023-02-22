@@ -58,40 +58,35 @@ public class S1873_상호의배틀필드 {
 			// 명령어 수행 시작
 			for (int c = 0; c < command.length(); c++) {
 				char C = command.charAt(c); // 명령어 하나
-				boolean isMove = false; // 이동 명령어가 들어오면 true로 바뀌고 이동하는 코드 실행
+				
+				// 포탄쏘기
+				if (C == 'S') {
+					shoot(train.i, train.j, train.dir);
+					continue;
+				} // 포탄쏘면 바로 다음으로 넘어감
 
 				if (C == 'U') {// 위로
 					train.dir[0] = -1;
 					train.dir[1] = 0;
 					map[train.i][train.j] = '^';
-					isMove = true;
 				} else if (C == 'D') { // 아래로
 					train.dir[0] = 1;
 					train.dir[1] = 0;
 					map[train.i][train.j] = 'v';
-					isMove = true;
 				} else if (C == 'L') { // 왼쪽으로
 					train.dir[0] = 0;
 					train.dir[1] = -1;
 					map[train.i][train.j] = '<';
-					isMove = true;
 				} else if (C == 'R') { // 오른쪽으로
 					train.dir[0] = 0;
 					train.dir[1] = 1;
 					map[train.i][train.j] = '>';
-					isMove = true;
 				}
 
-				// 이동해도 됨
-				if (isMove) {
-					if(!innerMap()) continue; //다음스텝이 범위 벗어나면 안됨
+				
+				if(!innerMap()) continue; //다음스텝이 범위 벗어나면 안됨
 					
-				}
 
-				// 포탄쏘기
-				if (C == 'S') {
-					shoot(train.i, train.j, train.dir);
-				}
 			} // 모든 명령어 수행 끝
 		} // 테스트케이스 끝
 	}
