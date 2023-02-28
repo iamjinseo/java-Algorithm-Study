@@ -1,6 +1,7 @@
 package gold4;
 
 import java.util.*;
+import java.util.Map.Entry;
 import java.io.*;
 
 /*
@@ -56,10 +57,10 @@ public class B17471_게리맨더링 {
 		} // 연결관계 입력 끝
 			// end input
 
-//		for (Entry<Integer, ArrayList<Integer>> e : adjList.entrySet()) {
-//			System.out.println("node " + e.getKey() + "의 인접노드들");
-//			System.out.println(e);
-//		}
+		for (Entry<Integer, ArrayList<Integer>> e : adjList.entrySet()) {
+			System.out.println("node " + e.getKey() + "의 인접노드들");
+			System.out.println(e);
+		}
 
 		combi(1); // 구역 조합 실시
 		if(res==Integer.MAX_VALUE) { //res가 결정이 안됐다는 건 구역을 나눌 수 없다는 뜻
@@ -82,12 +83,13 @@ public class B17471_게리맨더링 {
 				else if (!result[i]) // false인 애들은 파란 구역
 					blue.add(i); 
 			}
-//			System.out.println("red: " + red);
-//			System.out.println("blue: " + blue);
+			System.out.println("red: " + red);
+			System.out.println("blue: " + blue);
 
 			// 두 구역 다 연결 돼있으면
 			if (isConnected(red) && isConnected(blue)) {
 				// 각 구역의 인구수 합 구할 것
+				System.out.println("연결됨");
 				int redSum = 0;
 				int blueSum = 0;
 				// 모든 빨간 구역에 대해 순회
