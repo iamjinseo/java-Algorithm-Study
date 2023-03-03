@@ -11,7 +11,7 @@ import java.util.*;
  * 4. 벽돌 깨기
  * 5. 벽돌 아래로 내리기
  * */
-public class S5656_벽돌깨기_교수님버전 {
+public class S5656_벽돌깨기 {
 	static int[] di = { 1, -1, 0, 0 };
 	static int[] dj = { 0, 0, 1, -1 };
 	static int N, W, H; // 벽돌깨기 횟수, 맵 가로, 맵 세로

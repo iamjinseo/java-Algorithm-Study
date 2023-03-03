@@ -81,6 +81,7 @@ class Graph {
 	// depth가 1에서 시작하며 탐색 시작함. N에 도달하면 조건 충족임
 	public void DFS(int root, boolean[] visit, int depth) {
 		visit[root] = true; // 방문 먼저
+		System.out.println("root: " + root + ", visit: " + Arrays.toString(visit) + ", depth: " + depth);
 
 		// 깊이가 M이면 조건 충족 -> 종료
 		if (depth == 5) {
@@ -89,9 +90,14 @@ class Graph {
 		}
 
 		// 인접하는 노드가 있고 방문하지 않았을 때 탐색 시작
-		for (Integer v : adjList.get(root)) {
-			if (!visit[v])
-				DFS(v, visit, depth + 1);
+		ArrayList<Integer>adjNodes = adjList.get(root);
+		if (adjNodes != null) {
+			for (Integer v : adjNodes) {
+				System.out.println("  v: " + v + " visited: " + visit[v]);
+				if (!visit[v])
+					DFS(v, visit, depth + 1);
+			}
 		}
+		visit[root] = false; // depth==5에서 리턴되지 못하고 결국 끝났을 때: 실패한 경로일 때 방문 해제
 	}
 }
