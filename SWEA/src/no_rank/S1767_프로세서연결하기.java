@@ -32,11 +32,11 @@ public class S1767_프로세서연결하기 {
 		}
 	}
 
-	static int[] di = { 1, -1, 0, 0 };
-	static int[] dj = { 0, 0, 1, -1 };
-	static int N, maxCore, res, numOfCores;
+	static int[] di = { -1, 0, 1, 0 };
+	static int[] dj = { 0, 1, 0, -1 };
+	static int N, maxCore, res, wire;
 	static int[][] map;
-	static Queue<Core> cores = new ArrayDeque<>(); // 프로세서 좌표 넣을곳
+	static ArrayList<Core> cores = null; // 프로세서 좌표 넣을곳
 
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
@@ -45,9 +45,9 @@ public class S1767_프로세서연결하기 {
 
 		// start test case
 		for (int t = 1; t <= T; t++) {
-			int N = sc.nextInt();
+			N = sc.nextInt();
 			map = new int[N][N];
-
+			cores = new ArrayList<>();
 
 			for (int i = 0; i < N; i++) {
 				for (int j = 0; j < N; j++) {
@@ -58,11 +58,10 @@ public class S1767_프로세서연결하기 {
 				}
 			} // end input
 
-			maxCore = Integer.MIN_VALUE; // 가장 많이 꽂힌 프로세서 수
+//			maxCore = 0; // 가장 많이 꽂힌 프로세서 수
 			res = Integer.MAX_VALUE; // 가장 많이 프로세서 꽂았을 때의 가장 짧은 전선 길이
-			numOfCores = cores.size(); // 코어개수
-			System.out.println("코어 개수: "+numOfCores);
-			plug(0, map, 0); // 첫번째 플러그 꽂기 시작
+			wire = 0; // 전선 수
+			plug(0, 0); // 첫번째 플러그 꽂기 시작
 			sb.append('#').append(t).append(' ').append(res).append('\n');
 		} // end test case
 		System.out.println(sb);
@@ -70,71 +69,75 @@ public class S1767_프로세서연결하기 {
 
 	// cnt: 현재 검사중인 코어 수
 	// plugedCore: 연결된 코어 수
-	private static void plug(int cnt, int[][] map, int plugedCore) {
+	private static void plug(int cnt, int plugedCore) {
 		// 기저조건: 결국 모든 플러그 다 꽂음
-		if (cnt == numOfCores) {
-			System.out.println("코어 다 꽂았다!! ");
+		if (cnt == cores.size()) {
 			// 가장 많은 코어가 꽂혔는가?
-			System.out.println("몇개꽂음? "+plugedCore);
+			System.out.println("다꽂음 " + plugedCore);
+			if (plugedCore > maxCore)
+				res = Integer.MAX_VALUE; // res값 초기화
 			if (plugedCore >= maxCore) {
-				maxCore = plugedCore; 
-				// 가장 짧은 전선 길이를 구해본다
-				int sum = 0;
-				for (int i = 0; i < N; i++) {
-					for (int j = 0; j < N; j++) {
-						if (map[i][j] == 2)
-							sum++;
-					}
-				} // 전선 길이 다 구함
-				res = Math.min(res, sum);
-				System.out.println("결국 전선 길이는 "+res);
+				maxCore = plugedCore;
+				res = Math.min(res, wire);
+				System.out.println("결국 전선 길이는 " + res);
 			}
 			return;
 		}
 
 		// 유도파트: 현재 플러그의 네 방향에 꽂을거임 그리고 다음 플러그도 꽂을거임
 		int[][] newMap = new int[N][N];
-		copy(newMap, map); // 맵 복사: 현재 단계의 상태 저장
-		Core nowCore = cores.poll();
-		if(nowCore==null) return;
-		System.out.println("nowCore: "+nowCore);
-		boolean isPluged = false; // 지금 코어가 꽂혔는지 검사
+//		copy(newMap, map); // 맵 복사: 현재 단계의 상태 저장
+		Core nowCore = cores.get(cnt); // cnt번째 코어 검사
 
 		// 일단 지금 플러그의 네가지 주변부분에 꽂을수 있는지 좀 봐야겠음
+		// 근데 벽에 꽂혀잇음: 다음 프로세서 꽂기 ㄱㄱ 그리고 아무방향으로도 안꽂을것
+		int top = nowCore.i + di[0];
+		int right = nowCore.j + dj[1];
+		int down = nowCore.i + di[2];
+		int left = nowCore.j + dj[3];
+
+		if (down >= N || top < 0 || right >= N || left < 0) {
+			System.out.println(nowCore + " 벽에 꽂혀있음 ");
+			System.out.println("다음꺼 꽂으러 간다~~");
+			plug(cnt + 1, plugedCore + 1);
+			return;
+		}
+
+		// 네방향 꽂을 수 있는지 검사
 		for (int n = 0; n < 4; n++) {
 			int ni = nowCore.i + di[n];
 			int nj = nowCore.j + dj[n];
-			System.out.println("ni: "+ni+", nj: "+nj);
+			System.out.println(nowCore + ", ni: " + ni + ", nj: " + nj);
 
-			// 근데 벽에 꽂혀잇음: 다음 프로세서 꽂기 ㄱㄱ
-			if (ni < 0 || ni >= N || nj < 0 || nj >= N) {
-				System.out.println("벽에 꽂혀있음");
-				isPluged = true;
-				plug(cnt + 1, newMap, plugedCore + 1);
+			// 1있음: 못꽂음
+			if (map[ni][nj] != 0) {
+				plug(cnt + 1, plugedCore);
 			}
-			// 이 방향으론 전선을 꽂을수가 없음
-			else if (map[ni][nj] != 0)
-				continue;
 
-			// 이젠 좀 꽂을 수 있을 거 같음: 벽까지 꽂을수 있는지 검사하고 전선연결
-			if (canPlug(ni, nj, newMap, n)) {
+			// 꽂을 수 있을 거 같음: 벽까지 꽂을수 있는지 검사하고 전선연결
+			if (canPlug(ni, nj, n, plugedCore)) {
+				System.out.println("꽂을 수 있을 것 같다.");
 				// 꽂힘 => 다음프로세서 꽂기 ㄱㄱ
-				System.out.println("다꽂았음");
-				isPluged = true;
-				plug(cnt + 1, newMap, plugedCore + 1);
-			} else { // 못꽂음=>다음방향 ㄱㄱ
-				continue;
+
+				for (int[] is : map) {
+					System.out.println(Arrays.toString(is));
+				}
+				System.out.println("전선: " + wire);
+
+				System.out.println("이 방향으로 꽂았으니 다음꺼 꽂으러 ㄱㄱ");
+				plug(cnt + 1, plugedCore + 1);
+				System.out.println("=======전선빼기 시작: " + nowCore);
+				reset(ni, nj, n); // 이번 방향 꽂기는 끝났으므로 꽂힌전선 다 뽑음
+				System.out.println("전선 뺌: " + wire);
+			} else {
+				System.out.println("꽂기 실패");
+				reset(ni, nj, n);
 			}
-		}
-		// 걍 아무데도 못꽂음 => 다음 프로세서 꽂기 ㄱㄱ
-		if (!isPluged) {
-			System.out.println("못꽂음");
-			plug(cnt + 1, newMap, plugedCore);
 		}
 	}
 
 	// dir 방향으로 전진하며 벽으로 가볼거임
-	static boolean canPlug(int i, int j, int[][] newMap, int dir) {
+	static boolean canPlug(int i, int j, int dir, int plugedCore) {
 		/* 기저조건 */
 		// 벽을 만남 : 가능!! 전선 꽂으셈
 		if (i < 0 || i >= N || j < 0 || j >= N)
@@ -144,11 +147,33 @@ public class S1767_프로세서연결하기 {
 			return false;
 
 		// 재귀 실행파트: 다음 방향에 전선을 꽂을 수 있는가?
-		if (canPlug(i + di[dir], j + dj[dir], newMap, dir)) {
-			newMap[i][j] = 2; // 2는 전선임
+		if (canPlug(i + di[dir], j + dj[dir], dir, plugedCore)) {
+			map[i][j] = 2; // 2는 전선임
+			wire++; // 전선늘려
+			if (plugedCore + 1 <= maxCore && wire > res) { // 근데 res보다 커지면 안댐
+				System.out.print("원래 wird보다 크면 안됨");
+				return false;
+			}
 			return true; // 이전 재귀에도 꽂을 수 있다는 신호 주기
 		}
 		return false; // 위에서 꽂을 수 있는 신호 못주면 망한거임
+	}
+
+	// 전선 꽂은거 되돌리기
+	static void reset(int i, int j, int dir) {
+		for (int[] is : map) {
+			System.out.println(Arrays.toString(is));
+		}
+		while (i >= 0 && i < N && j >= 0 && j < N && map[i][j] != 1) {
+			if (map[i][j] == 2) {
+				System.out.printf("[%d %d]에서 전선발견\n", i, j);
+				map[i][j] = 0;
+				wire--; // 전선줄여
+				System.out.println("전선 하나 줄임: " + wire);
+			}
+			i += di[dir];
+			j += dj[dir];
+		}
 	}
 
 	// 배열 복사
