@@ -9,5 +9,21 @@ import java.io.*;
  * 쪼개진 문자열들에 대하여 parseInt후 sum에서 빼기
  * */
 public class B1541_잃어버린괄호 {
-
+	public static void main(String[] args) {
+		int res = 0;
+		Scanner sc = new Scanner(System.in);
+		StringTokenizer st = new StringTokenizer(sc.nextLine(), "-");
+		StringTokenizer st2 = new StringTokenizer(st.nextToken(), "+");
+		
+		while(st2.hasMoreTokens()) {
+			res += Integer.parseInt(st2.nextToken());
+		}
+		while(st.hasMoreTokens()) {
+			st2 = new StringTokenizer(st.nextToken(), "+");
+			while(st2.hasMoreTokens()) {
+				res -= Integer.parseInt(st2.nextToken());
+			}
+		}
+		System.out.println(res);
+	}
 }
