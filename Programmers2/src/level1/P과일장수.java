@@ -15,7 +15,7 @@ public class P과일장수 {
 		int cnt = 0;
 		for (int i = score.length-1; i >= 0; i--) {
 			cnt++;
-			min = Math.min(min, score[i]);
+			min = Math.min(mi, score[i]);
 			if(cnt==m) {
 				res += min*m;
 				min = 0;
