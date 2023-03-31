@@ -37,6 +37,10 @@ public class B1600_말이되고픈원숭이 {
 		H = Integer.parseInt(st.nextToken());
 		map = new int[H][W];
 		System.out.println("H: " + H + "W: " + W);
+		if(H==1 && W==1) {
+			System.out.println(0);
+			return;
+		}
 
 		for (int i = 0; i < H; i++) {
 			st = new StringTokenizer(br.readLine());
@@ -66,6 +70,10 @@ public class B1600_말이되고픈원숭이 {
 			System.out.println("polled: " + polled);
 			int i = polled.i;
 			int j = polled.j;
+			if (i == H - 1 && j == W - 1) {
+				System.out.println("도달");
+				return;
+			}
 
 			// 나이트스텝으로 이동 가능한지 검사
 			Pair knightPair = isKnight(i, j);
@@ -77,10 +85,7 @@ public class B1600_말이되고픈원숭이 {
 				int nj = knightPair.j;
 				map[ni][nj] = map[i][j] + 1;
 				System.out.println("나이트스텝 다음위치는 " + ni + ", " + nj + "이고 값은 " + map[ni][nj]);
-				if (ni == H - 1 && nj == W - 1) {
-					System.out.println("도달");
-					return;
-				}
+				
 				q.offer(new Pair(ni, nj));
 			}
 			// 나이트스텝으로 이동 불가
@@ -88,16 +93,14 @@ public class B1600_말이되고픈원숭이 {
 				for (int n = 0; n < 4; n++) {
 					int ni = i + di[n];
 					int nj = j + dj[n];
-					if (ni == H - 1 && nj == W - 1) {
-						System.out.println("도달");
-						return;
-					}
+					
 					if (isValidScope(ni, nj)) {
-						if (map[ni][nj] > 0) {
-							map[ni][nj] = Math.min(map[i][j] + 1, map[ni][nj]);
-							System.out.println("스텝 다음위치는 " + ni + ", " + nj + "이고 값은 " + map[ni][nj]);
-							q.offer(new Pair(ni, nj));
-						} else if (map[ni][nj] == 0) {
+//						if (map[ni][nj] > 0) {
+//							map[ni][nj] = Math.min(map[i][j] + 1, map[ni][nj]);
+//							System.out.println("스텝 다음위치는 " + ni + ", " + nj + "이고 값은 " + map[ni][nj]);
+//							q.offer(new Pair(ni, nj));
+//						} 
+						if (map[ni][nj] == 0) {
 							map[ni][nj] = map[i][j] + 1;
 							System.out.println("스텝 다음위치는 " + ni + ", " + nj + "이고 값은 " + map[ni][nj]);
 							q.offer(new Pair(ni, nj));
