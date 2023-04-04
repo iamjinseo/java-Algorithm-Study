@@ -60,7 +60,9 @@ public class B9205_맥주마시면서걸어가기 {
 			// i에서 j로 갈 수 있는지 검사
 			for (int k = 0; k < list.size(); k++) {
 				for (int i = 0; i < list.size(); i++) {
+					if(i==k ) continue;
 					for (int j = 0; j < list.size(); j++) {
+						if(i==j || j==k) continue;
 						if(dist[i][k] && dist[k][j]) {
 							dist[i][j] = true;
 						}
@@ -72,6 +74,8 @@ public class B9205_맥주마시면서걸어가기 {
 		}
 		System.out.println(sb);
 	}
+	
+	
 	private static boolean isNear(Node node, Node node2) {
 		if(Math.abs(node.i - node2.i) 
 		   + Math.abs(node.j - node2.j )<= 1000)
