@@ -87,20 +87,20 @@ public class B16236 {
 					foods.add(new Shark(ni, nj, now.time+1, now.weight));
 					
 					// 다른 사방에도 먹을 게 있을지도
-//					for (int n2 = 0; n2 < 4; n2++) {
-//						
-//						if(n2==n) continue;
-//						
-//						int ni2 = now.i + di[n2];
-//						int nj2 = now.j + dj[n2];
-//						
-//						if(ni2<0 || ni2>=N || nj2<0 || nj2>=N || visit[ni2][nj2]) continue;
-//						
-//						if(map[ni2][nj2] < now.weight && map[ni2][nj2]!=0) {
-//							System.out.printf("[%d][%d](%d)로도 먹으러감ㅋ. time: %d\n", ni2, nj2, map[ni2][nj2], now.time+1);
-//							foods.add(new Shark(ni2, nj2, now.time+1, now.weight));
-//						}
-//					}
+					for (int n2 = 0; n2 < 4; n2++) {
+						
+						if(n2==n) continue;
+						
+						int ni2 = now.i + di[n2];
+						int nj2 = now.j + dj[n2];
+						
+						if(ni2<0 || ni2>=N || nj2<0 || nj2>=N || visit[ni2][nj2]) continue;
+						
+						if(map[ni2][nj2] < now.weight && map[ni2][nj2]!=0) {
+							System.out.printf("[%d][%d](%d)로도 먹으러감ㅋ. time: %d\n", ni2, nj2, map[ni2][nj2], now.time+1);
+							foods.add(new Shark(ni2, nj2, now.time+1, now.weight));
+						}
+					}
 					findFood = true;
 					break;
 				}
