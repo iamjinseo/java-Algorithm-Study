@@ -19,12 +19,6 @@ public class B16236 {
 			this.time = time;
 			this.weight = weight;
 		}
-
-		@Override
-		public String toString() {
-			return "Shark [i=" + i + ", j=" + j + ", time=" + time + ", weight=" + weight + "]";
-		}
-
 	}
 
 	static int[][] map;
